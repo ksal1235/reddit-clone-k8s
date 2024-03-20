@@ -15,7 +15,7 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/Aj7Ay/reddit-clone-k8s.git'
+                git branch: 'main', url: 'https://github.com/ksal1235/reddit-clone-k8s.git'
             }
         }
         stage('Install Dependencies') {
@@ -54,20 +54,20 @@ pipeline{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
                        sh "docker build -t reddit ."
-                       sh "docker tag reddit sevenajay/reddit:latest "
-                       sh "docker push sevenajay/reddit:latest "
+                       sh "docker tag reddit khan234/reddit:latest "
+                       sh "docker push khan234/reddit:latest "
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image sevenajay/reddit:latest > trivy.txt"
+                sh "trivy image khan234/reddit:latest > trivy.txt"
             }
         }
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name reddit -p 3000:3000 sevenajay/reddit:latest'
+                sh 'docker run -d --name reddit -p 3000:3000 khan234/reddit:latest'
             }
         }
     }
