@@ -23,14 +23,12 @@ pipeline{
                 sh "npm install"
             }
         }
-        stage("Sonarqube Analysis "){
-            steps{
-                withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Reddit \
-                    -Dsonar.projectKey=Reddit '''
-                }
+        stage('SonarQube Analysis') {
+            def scannerHome = tool 'SonarScanner';
+            withSonarQubeEnv() {
+            sh "${scannerHome}/bin/sonar-scanner"
             }
-        }
+        } 
         stage("quality gate"){
            steps {
                 script {
