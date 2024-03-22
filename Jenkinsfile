@@ -64,9 +64,15 @@ pipeline{
                 sh "trivy image khan234/reddit:latest > trivy.txt"
             }
         }
-        stage('Deploy to container'){
+        stage('Deploy to kubernets'){
             steps{
-                sh 'docker run -d --name reddit -p 3000:3000 khan234/reddit:latest'
+                script{
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                       sh 'kubectl apply -f deployment.yml'
+                       sh 'kubectl apply -f service.yml'
+                       sh 'kubectl apply -f ingress.yml'
+                  }
+                }
             }
         }
     }
